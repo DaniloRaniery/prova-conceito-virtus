@@ -4,8 +4,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.virtus.blog.domain.Body;
 import com.virtus.blog.repository.BodyRepository;
 import com.virtus.blog.security.AuthoritiesConstants;
+import com.virtus.blog.service.BodyService;
 import com.virtus.blog.service.PostService;
 import com.virtus.blog.service.dto.RequestPostDTO;
+import com.virtus.blog.service.dto.UpdatePostDTO;
 import com.virtus.blog.web.rest.util.HeaderUtil;
 import com.virtus.blog.web.rest.util.PaginationUtil;
 import com.virtus.blog.service.dto.PostDTO;
@@ -41,12 +43,15 @@ public class PostResource {
 
     private final PostService postService;
 
+    private final BodyService bodyService;
+
     private final BodyRepository bodyRepository;
 
-    public PostResource(PostService postService, BodyRepository bodyRepository) {
+    public PostResource(PostService postService, BodyRepository bodyRepository, BodyService bodyService) {
 
         this.postService = postService;
         this.bodyRepository = bodyRepository;
+        this.bodyService = bodyService;
     }
 
     /**
@@ -72,7 +77,7 @@ public class PostResource {
     /**
      * PUT  /posts : Updates an existing post.
      *
-     * @param postDTO the postDTO to update
+     * @param updatePostDTO the postDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated postDTO,
      * or with status 400 (Bad Request) if the postDTO is not valid,
      * or with status 500 (Internal Server Error) if the postDTO couldn't be updated
@@ -80,14 +85,12 @@ public class PostResource {
      */
     @PutMapping("/posts")
     @Timed
-    public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO) throws URISyntaxException {
-        log.debug("REST request to update Post : {}", postDTO);
-//        if (postDTO.getId() == null) {
-//            return createPost(postDTO); Veririfcar se deve ficar
-//        }
-        PostDTO result = postService.updatePost(postDTO);
+    public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody UpdatePostDTO updatePostDTO) throws URISyntaxException {
+        log.debug("REST request to update Post : {}", updatePostDTO);
+
+        PostDTO result = postService.updatePost(updatePostDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, postDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatePostDTO.getId().toString()))
             .body(result);
     }
 
@@ -118,6 +121,14 @@ public class PostResource {
     public ResponseEntity<PostDTO> getPost(@PathVariable Long id) {
         log.debug("REST request to get Post : {}", id);
         PostDTO postDTO = postService.findOne(id);
+        try {
+            Body body = bodyRepository.findOne(postDTO.getBodyId());
+            postDTO.setTextBody(body.getText());
+            postDTO.setAssets(bodyService.getAssets(body.getId()));
+        } catch (NullPointerException e) {
+
+        }
+
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(postDTO));
     }
 
@@ -139,7 +150,7 @@ public class PostResource {
      * SEARCH  /_search/posts?query=:query : search for the post corresponding
      * to the query.
      *
-     * @param query the query of the post search
+     * @param query    the query of the post search
      * @param pageable the pagination information
      * @return the result of the search
      */
