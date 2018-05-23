@@ -5,6 +5,9 @@ import com.virtus.blog.domain.Commentary;
 
 import com.virtus.blog.repository.CommentaryRepository;
 import com.virtus.blog.repository.search.CommentarySearchRepository;
+import com.virtus.blog.security.AuthoritiesConstants;
+import com.virtus.blog.service.CommentaryService;
+import com.virtus.blog.service.dto.RequestCommentaryDTO;
 import com.virtus.blog.web.rest.errors.BadRequestAlertException;
 import com.virtus.blog.web.rest.util.HeaderUtil;
 import com.virtus.blog.web.rest.util.PaginationUtil;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,12 +50,16 @@ public class CommentaryResource {
 
     private final CommentaryMapper commentaryMapper;
 
+    private final CommentaryService commentaryService;
+
     private final CommentarySearchRepository commentarySearchRepository;
 
-    public CommentaryResource(CommentaryRepository commentaryRepository, CommentaryMapper commentaryMapper, CommentarySearchRepository commentarySearchRepository) {
+    public CommentaryResource(CommentaryRepository commentaryRepository, CommentaryMapper commentaryMapper,
+                              CommentarySearchRepository commentarySearchRepository, CommentaryService commentaryService) {
         this.commentaryRepository = commentaryRepository;
         this.commentaryMapper = commentaryMapper;
         this.commentarySearchRepository = commentarySearchRepository;
+        this.commentaryService = commentaryService;
     }
 
     /**
@@ -63,6 +71,7 @@ public class CommentaryResource {
      */
     @PostMapping("/commentaries")
     @Timed
+    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<CommentaryDTO> createCommentary(@Valid @RequestBody CommentaryDTO commentaryDTO) throws URISyntaxException {
         log.debug("REST request to save Commentary : {}", commentaryDTO);
         if (commentaryDTO.getId() != null) {
@@ -88,6 +97,7 @@ public class CommentaryResource {
      */
     @PutMapping("/commentaries")
     @Timed
+    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<CommentaryDTO> updateCommentary(@Valid @RequestBody CommentaryDTO commentaryDTO) throws URISyntaxException {
         log.debug("REST request to update Commentary : {}", commentaryDTO);
         if (commentaryDTO.getId() == null) {
@@ -103,16 +113,17 @@ public class CommentaryResource {
     }
 
     /**
-     * GET  /commentaries : get all the commentaries.
+     * GET  /commentaries : get all the commentaries for post.
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of commentaries in body
      */
     @GetMapping("/commentaries")
     @Timed
-    public ResponseEntity<List<CommentaryDTO>> getAllCommentaries(Pageable pageable) {
+    @Secured(AuthoritiesConstants.USER)
+    public ResponseEntity<List<CommentaryDTO>> getAllCommentariesForPost(RequestCommentaryDTO requestCommentaryDTO, Pageable pageable) {
         log.debug("REST request to get a page of Commentaries");
-        Page<Commentary> page = commentaryRepository.findAll(pageable);
+        Page<Commentary> page = commentaryService.getAllCommentsForUser(requestCommentaryDTO, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/commentaries");
         return new ResponseEntity<>(commentaryMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
@@ -125,6 +136,7 @@ public class CommentaryResource {
      */
     @GetMapping("/commentaries/{id}")
     @Timed
+    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<CommentaryDTO> getCommentary(@PathVariable Long id) {
         log.debug("REST request to get Commentary : {}", id);
         Commentary commentary = commentaryRepository.findOne(id);
@@ -140,6 +152,7 @@ public class CommentaryResource {
      */
     @DeleteMapping("/commentaries/{id}")
     @Timed
+    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<Void> deleteCommentary(@PathVariable Long id) {
         log.debug("REST request to delete Commentary : {}", id);
         commentaryRepository.delete(id);
@@ -151,12 +164,13 @@ public class CommentaryResource {
      * SEARCH  /_search/commentaries?query=:query : search for the commentary corresponding
      * to the query.
      *
-     * @param query the query of the commentary search
+     * @param query    the query of the commentary search
      * @param pageable the pagination information
      * @return the result of the search
      */
     @GetMapping("/_search/commentaries")
     @Timed
+    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<List<CommentaryDTO>> searchCommentaries(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of Commentaries for query {}", query);
         Page<Commentary> page = commentarySearchRepository.search(queryStringQuery(query), pageable);
