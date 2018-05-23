@@ -75,6 +75,9 @@ public class MailService {
 
     @Async
     public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
+        if(user.getLangKey() == null){
+            user.setLangKey("pt-br");
+        }
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);

@@ -29,7 +29,6 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 /**
  * REST controller for managing Body.
  */
-@RestController
 @RequestMapping("/api")
 public class BodyResource {
 
