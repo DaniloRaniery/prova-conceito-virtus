@@ -85,6 +85,7 @@ public class PostResource {
      */
     @PutMapping("/posts")
     @Timed
+    @Secured({AuthoritiesConstants.AUTHOR, AuthoritiesConstants.ADMIN})
     public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody UpdatePostDTO updatePostDTO) throws URISyntaxException {
         log.debug("REST request to update Post : {}", updatePostDTO);
 
@@ -140,6 +141,7 @@ public class PostResource {
      */
     @DeleteMapping("/posts/{id}")
     @Timed
+    @Secured({AuthoritiesConstants.AUTHOR, AuthoritiesConstants.ADMIN})
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         log.debug("REST request to delete Post : {}", id);
         postService.delete(id);
