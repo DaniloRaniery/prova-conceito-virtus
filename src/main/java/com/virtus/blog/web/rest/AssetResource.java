@@ -28,7 +28,6 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 /**
  * REST controller for managing Asset.
  */
-@RestController
 @RequestMapping("/api")
 public class AssetResource {
 
