@@ -7,8 +7,11 @@ import com.virtus.blog.repository.AssetRepository;
 import com.virtus.blog.repository.BodyRepository;
 import com.virtus.blog.repository.PostRepository;
 import com.virtus.blog.repository.search.PostSearchRepository;
+import com.virtus.blog.service.dto.BodyDTO;
 import com.virtus.blog.service.dto.PostDTO;
 import com.virtus.blog.service.dto.RequestPostDTO;
+import com.virtus.blog.service.dto.UpdatePostDTO;
+import com.virtus.blog.service.mapper.BodyMapper;
 import com.virtus.blog.service.mapper.PostMapper;
 import com.virtus.blog.web.rest.errors.PostNotFoundException;
 import org.slf4j.Logger;
@@ -34,22 +37,24 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    private final AssetRepository assetRepository;
-
     private final BodyRepository bodyRepository;
+
+    private final BodyService bodyService;
 
     private final PostMapper postMapper;
 
+    private final BodyMapper bodyMapper;
 
     private final PostSearchRepository postSearchRepository;
 
     public PostService(PostRepository postRepository, PostMapper postMapper, PostSearchRepository postSearchRepository,
-                       AssetRepository assetRepository, BodyRepository bodyRepository) {
+                       BodyService bodyService, BodyRepository bodyRepository, BodyMapper bodyMapper) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.postSearchRepository = postSearchRepository;
-        this.assetRepository = assetRepository;
+        this.bodyService = bodyService;
         this.bodyRepository = bodyRepository;
+        this.bodyMapper = bodyMapper;
     }
 
     /**
@@ -121,20 +126,55 @@ public class PostService {
     /**
      * Update all information for a specific post, and return the modified post.
      *
-     * @param postDTO user to update
+     * @param updatePostDTO post to update
+     * @return updated post
+     * @throws PostNotFoundException 400 (Bad Request) if the post id is not found
+     */
+    public PostDTO updatePost(UpdatePostDTO updatePostDTO) {
+
+        PostDTO postToUpdate = this.findOne((updatePostDTO.getId()));
+        Body body = bodyRepository.findOne(postToUpdate.getBodyId());
+        postToUpdate.setTextBody(body.getText());
+        postToUpdate.setAssets(bodyService.getAssets(body.getId()));
+
+        if (postToUpdate == null) {
+            throw new PostNotFoundException();
+        }
+
+        if (updatePostDTO.getTitle() != null) {
+            postToUpdate.setTitle(updatePostDTO.getTitle());
+        }
+        if (updatePostDTO.getTextBody() != null) {
+            postToUpdate.setTextBody(updatePostDTO.getTextBody());
+        }
+        if (updatePostDTO.getDate() != null) {
+            postToUpdate.setDate(updatePostDTO.getDate());
+        }
+        if (updatePostDTO.getAssets() != null) {
+            postToUpdate.setAssets(updatePostDTO.getAssets());
+        }
+
+        return this.updatePost(postToUpdate);
+    }
+
+    /**
+     * Update all information for a specific post, and return the modified post.
+     *
+     * @param postDTO post to update
      * @return updated post
      * @throws PostNotFoundException 400 (Bad Request) if the post id is not found
      */
     public PostDTO updatePost(PostDTO postDTO) {
 
-        Post optionalPostDTO = postRepository
-            .findOne(postDTO.getId());
+        PostDTO postDTOToReturn = this.save(postDTO);
+        bodyService.updateBody(postDTO.getBodyId(), postDTO.getTextBody(), postDTO.getAssets());
 
-        if (optionalPostDTO == null) {
-            throw new PostNotFoundException();
-        }
+        BodyDTO bodyDTO = bodyMapper.toDto(bodyRepository.findOne(postDTO.getBodyId()));
 
-        return this.save(postDTO);
+        postDTOToReturn.setTextBody(bodyDTO.getText());
+        postDTOToReturn.setAssets(bodyService.getAssets(bodyDTO.getId()));
+
+        return postDTOToReturn;
     }
 
     /**
@@ -149,66 +189,30 @@ public class PostService {
         postDTO.setTitle(requestPostDTO.getTitle());
         postDTO.setDate(requestPostDTO.getDate());
         postDTO = this.save(postDTO);
-        Body body = (this.createBody(requestPostDTO, postDTO));
+        Body body = (bodyService.createBody(requestPostDTO, postDTO));
         postDTO.setBodyId(body.getId());
+        postDTO.setTextBody(body.getText());
+        postDTO.setAssets(bodyService.getAssets(body.getId()));
 
-        return this.updatePost(postDTO);
+        this.updatePost(postDTO);
+        return postDTO;
     }
 
     /**
-     * Create a body.
-     *
-     * @param requestPostDTO the request data to create Post
-     * @param postDTO        the post being generated
-     * @return the created body
-     */
-    private Body createBody(RequestPostDTO requestPostDTO, PostDTO postDTO) {
-
-        Body body = new Body();
-        body.setText(requestPostDTO.getBodyText());
-        body.setPost(postMapper.toEntity(postDTO));
-        bodyRepository.save(body);
-        body.setAssets(this.createAsset(requestPostDTO, body));
-
-        return body;
-    }
-
-    /**
-     * Create a assets list.
-     *
-     * @param requestPostDTO the request data to create Post
-     * @param body           the body being generated
-     * @return the assets list
-     */
-    private Set<Asset> createAsset(RequestPostDTO requestPostDTO, Body body) {
-
-        Set<Asset> assets = new HashSet<>();
-        for (String asset : requestPostDTO.getAssets()) {
-            Asset newAsset = new Asset();
-            newAsset.setImagePath(asset);
-            newAsset.setBody(body);
-            Asset savedAsset = assetRepository.save(newAsset);
-            assets.add(savedAsset);
-        }
-
-        return assets;
-    }
-
-
-    /**
-     * Get all assets from sent body
+     * Get posts from sent page
      *
      * @param page the postDTO page
      * @return the postDTO list
      */
     public List<PostDTO> getPostDTOFormat(Page<PostDTO> page) {
 
+        postSearchRepository.deleteAll();
         List<PostDTO> pagesToReturn = new ArrayList<>();
         for (PostDTO post : page.getContent()) {
             PostDTO postDTO = new PostDTO();
             Body body = bodyRepository.findOne(post.getBodyId());
             postDTO.setTextBody(body.getText());
-            postDTO.setAssets(this.getAssets(body.getId()));
+            postDTO.setAssets(bodyService.getAssets(body.getId()));
             postDTO.setTitle(post.getTitle());
             postDTO.setDate(post.getDate());
             postDTO.setBodyId(post.getBodyId());
@@ -216,22 +220,5 @@ public class PostService {
             pagesToReturn.add(postDTO);
         }
         return pagesToReturn;
-    }
-
-    /**
-     * Get all assets from sent body
-     *
-     * @param bodyId the body id with assets
-     * @return the assets list
-     */
-    private List<String> getAssets(Long bodyId) {
-
-        Body body = bodyRepository.findOne(bodyId);
-        List<String> listToReturn = new ArrayList<>();
-
-        for (Asset asset : body.getAssets()) {
-            listToReturn.add(asset.getImagePath());
-        }
-        return listToReturn;
     }
 }
