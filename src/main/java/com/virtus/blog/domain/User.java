@@ -89,6 +89,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column
     private String biography;
 
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
+    private Set<Post> posts = new HashSet<>();
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -210,6 +214,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
     @Override

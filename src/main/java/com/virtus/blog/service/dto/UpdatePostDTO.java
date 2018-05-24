@@ -20,6 +20,8 @@ public class UpdatePostDTO {
 
     private List<String> assets;
 
+    private Long authorId;
+
     public Long getId() {
         return id;
     }
@@ -66,6 +68,14 @@ public class UpdatePostDTO {
 
     public void setAssets(List<String> assets) {
         this.assets = assets;
+    }
+
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
     @Override

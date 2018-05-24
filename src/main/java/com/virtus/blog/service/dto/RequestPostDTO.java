@@ -20,6 +20,17 @@ public class RequestPostDTO {
     @NotNull
     private String bodyText;
 
+    @NotNull
+    private Long authorId;
+
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
+
     private List<String> assets = new ArrayList<String>();
 
     public String getTitle() {

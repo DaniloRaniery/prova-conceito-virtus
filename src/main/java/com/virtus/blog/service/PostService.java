@@ -6,6 +6,7 @@ import com.virtus.blog.domain.Post;
 import com.virtus.blog.repository.AssetRepository;
 import com.virtus.blog.repository.BodyRepository;
 import com.virtus.blog.repository.PostRepository;
+import com.virtus.blog.repository.UserRepository;
 import com.virtus.blog.repository.search.PostSearchRepository;
 import com.virtus.blog.service.dto.BodyDTO;
 import com.virtus.blog.service.dto.PostDTO;
@@ -39,6 +40,8 @@ public class PostService {
 
     private final BodyRepository bodyRepository;
 
+    private final UserRepository userRepository;
+
     private final BodyService bodyService;
 
     private final PostMapper postMapper;
@@ -48,13 +51,14 @@ public class PostService {
     private final PostSearchRepository postSearchRepository;
 
     public PostService(PostRepository postRepository, PostMapper postMapper, PostSearchRepository postSearchRepository,
-                       BodyService bodyService, BodyRepository bodyRepository, BodyMapper bodyMapper) {
+                       BodyService bodyService, BodyRepository bodyRepository, BodyMapper bodyMapper, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.postSearchRepository = postSearchRepository;
         this.bodyService = bodyService;
         this.bodyRepository = bodyRepository;
         this.bodyMapper = bodyMapper;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -66,6 +70,7 @@ public class PostService {
     public PostDTO save(PostDTO postDTO) {
         log.debug("Request to save Post : {}", postDTO);
         Post post = postMapper.toEntity(postDTO);
+        post.setAuthor(userRepository.findOne(postDTO.getAuthorId()));
         post = postRepository.save(post);
         PostDTO result = postMapper.toDto(post);
         postSearchRepository.save(post);
@@ -136,6 +141,7 @@ public class PostService {
         Body body = bodyRepository.findOne(postToUpdate.getBodyId());
         postToUpdate.setTextBody(body.getText());
         postToUpdate.setAssets(bodyService.getAssets(body.getId()));
+        postToUpdate.setAuthorId(updatePostDTO.getAuthorId());
 
         if (postToUpdate == null) {
             throw new PostNotFoundException();
@@ -173,6 +179,7 @@ public class PostService {
 
         postDTOToReturn.setTextBody(bodyDTO.getText());
         postDTOToReturn.setAssets(bodyService.getAssets(bodyDTO.getId()));
+        postDTOToReturn.setAuthorId(postDTO.getAuthorId());
 
         return postDTOToReturn;
     }
@@ -188,12 +195,13 @@ public class PostService {
         PostDTO postDTO = new PostDTO();
         postDTO.setTitle(requestPostDTO.getTitle());
         postDTO.setDate(requestPostDTO.getDate());
+        postDTO.setAuthorId(requestPostDTO.getAuthorId());
         postDTO = this.save(postDTO);
         Body body = (bodyService.createBody(requestPostDTO, postDTO));
         postDTO.setBodyId(body.getId());
         postDTO.setTextBody(body.getText());
         postDTO.setAssets(bodyService.getAssets(body.getId()));
-
+        postDTO.setAuthorId(requestPostDTO.getAuthorId());
         this.updatePost(postDTO);
         return postDTO;
     }

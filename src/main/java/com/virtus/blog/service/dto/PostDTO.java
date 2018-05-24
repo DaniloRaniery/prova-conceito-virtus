@@ -1,17 +1,14 @@
 package com.virtus.blog.service.dto;
 
-
-import com.virtus.blog.domain.Asset;
-import com.virtus.blog.domain.Body;
-import org.checkerframework.checker.initialization.qual.NotOnlyInitialized;
+import com.virtus.blog.domain.Post;
 
 import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the Post entity.
@@ -26,11 +23,16 @@ public class PostDTO implements Serializable {
     @NotNull
     private ZonedDateTime date;
 
+    @NotNull
+    private Long authorId;
+
     private Long bodyId;
 
     private String textBody;
 
     private List<String> assets;
+
+    private Set<Post> posts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -78,6 +80,22 @@ public class PostDTO implements Serializable {
 
     public void setAssets(List<String> assets) {
         this.assets = assets;
+    }
+
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
     @Override

@@ -1,0 +1,177 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="luan (generated)" id="1527167551423-1">
+        <createSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-2">
+        <createTable tableName="asset">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="assetPK"/>
+            </column>
+            <column name="image_path" type="VARCHAR(255)"/>
+            <column name="body_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-3">
+        <createTable tableName="body">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="bodyPK"/>
+            </column>
+            <column name="text" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-4">
+        <createTable tableName="commentary">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="commentaryPK"/>
+            </column>
+            <column name="text" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_id" type="BIGINT"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-5">
+        <createTable tableName="jhi_authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-6">
+        <createTable tableName="jhi_persistent_audit_event">
+            <column autoIncrement="true" name="event_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_persistent_audit_eventPK"/>
+            </column>
+            <column name="event_date" type="TIMESTAMP"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="principal" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-7">
+        <createTable tableName="jhi_persistent_audit_evt_data">
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-8">
+        <createTable tableName="jhi_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_userPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="biography" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="image_url" type="VARCHAR(256)"/>
+            <column name="lang_key" type="VARCHAR(6)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)"/>
+            <column name="reset_date" type="TIMESTAMP"/>
+            <column name="reset_key" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-9">
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-10">
+        <createTable tableName="post">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="postPK"/>
+            </column>
+            <column name="jhi_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="BIGINT"/>
+            <column name="body_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-11">
+        <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-12">
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-13">
+        <addPrimaryKey columnNames="name" constraintName="jhi_authorityPK" tableName="jhi_authority"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-14">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_COMMENTARYUSER_ID_COL" tableName="commentary"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-15">
+        <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-16">
+        <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-17">
+        <addUniqueConstraint columnNames="author_id" constraintName="UC_POSTAUTHOR_ID_COL" tableName="post"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-18">
+        <addUniqueConstraint columnNames="body_id" constraintName="UC_POSTBODY_ID_COL" tableName="post"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-19">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-20">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FK2ehnyx2si4tjd2nt4q7y40v8m" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="jhi_persistent_audit_event"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-21">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-22">
+        <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="commentary" constraintName="FK7u0oo6wyaothqx4xcjh4ex0u6" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="post"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-23">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_posts" constraintName="FKccj1iupbclk5yilw67chg4da9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-24">
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="post" constraintName="FKjwr1qwhc6w9bef0i6m1kdqqn2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-25">
+        <addForeignKeyConstraint baseColumnNames="body_id" baseTableName="post" constraintName="FKk1q70go1lnajoemhwspkgfiwk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="body"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-26">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="commentary" constraintName="FKls0uh665abf7k2dypnbsf6ett" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-27">
+        <addForeignKeyConstraint baseColumnNames="posts_id" baseTableName="jhi_user_posts" constraintName="FKok5mvblfgnlolbnp2o8alfeqc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="post"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527167551423-28">
+        <addForeignKeyConstraint baseColumnNames="body_id" baseTableName="asset" constraintName="FKsqlbsl1diwuk28h5353t9suin" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="body"/>
+    </changeSet>
+</databaseChangeLog>

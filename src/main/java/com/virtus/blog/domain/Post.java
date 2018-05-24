@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -37,6 +38,10 @@ public class Post implements Serializable {
     @NotNull
     @Column(name = "jhi_date", nullable = false)
     private ZonedDateTime date;
+
+    @ManyToOne
+    @JoinColumn(unique = true)
+    private User author;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -114,6 +119,14 @@ public class Post implements Serializable {
         this.commentaries.remove(commentary);
         commentary.setPost(null);
         return this;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public void setCommentaries(Set<Commentary> commentaries) {
