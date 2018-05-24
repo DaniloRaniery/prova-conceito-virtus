@@ -1,0 +1,23 @@
+
+{
+    "jHipsterBlogApp": {
+        "authorAcess" : {
+            "home": {
+                "title": "Author Acesses",
+                "createLabel": "Create a new Author Acess",
+                "createOrEditLabel": "Create or edit a Author Acess",
+                "search": "Search for Author Acess"
+            },
+            "created": "A new Author Acess is created with identifier {{ param }}",
+            "updated": "A Author Acess is updated with identifier {{ param }}",
+            "deleted": "A Author Acess is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Author Acess {{ id }}?"
+            },
+            "detail": {
+                "title": "Author Acess"
+            },
+            "requestLogin": "Request Login"
+        }
+    }
+}

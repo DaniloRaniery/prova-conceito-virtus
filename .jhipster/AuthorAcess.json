@@ -1,0 +1,19 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "requestLogin",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20180524180456",
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "entityTableName": "author_acess",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

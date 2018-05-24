@@ -11,6 +11,7 @@
                 "commentaryMySuffix": "Commentary",
                 "bodyMySuffix": "Body",
                 "assetMySuffix": "Asset",
+                "authorAcess": "Author Acess",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

@@ -4,6 +4,7 @@ import { JHipsterBlogPostMySuffixModule } from './post-my-suffix/post-my-suffix.
 import { JHipsterBlogCommentaryMySuffixModule } from './commentary-my-suffix/commentary-my-suffix.module';
 import { JHipsterBlogBodyMySuffixModule } from './body-my-suffix/body-my-suffix.module';
 import { JHipsterBlogAssetMySuffixModule } from './asset-my-suffix/asset-my-suffix.module';
+import { JHipsterBlogAuthorAcessModule } from './author-acess/author-acess.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -12,6 +13,7 @@ import { JHipsterBlogAssetMySuffixModule } from './asset-my-suffix/asset-my-suff
         JHipsterBlogCommentaryMySuffixModule,
         JHipsterBlogBodyMySuffixModule,
         JHipsterBlogAssetMySuffixModule,
+        JHipsterBlogAuthorAcessModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

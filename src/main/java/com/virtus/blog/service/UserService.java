@@ -1,6 +1,5 @@
 package com.virtus.blog.service;
 
-import com.virtus.blog.config.CacheConfiguration;
 import com.virtus.blog.domain.Authority;
 import com.virtus.blog.domain.User;
 import com.virtus.blog.repository.AuthorityRepository;

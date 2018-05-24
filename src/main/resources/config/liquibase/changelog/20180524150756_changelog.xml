@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="luan (generated)" id="1527185279285-1">
+        <addColumn tableName="post">
+            <column name="author_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527185279285-2">
+        <addUniqueConstraint columnNames="author_id" constraintName="UC_POSTAUTHOR_ID_COL" tableName="post"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527185279285-3">
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="post" constraintName="FKjwr1qwhc6w9bef0i6m1kdqqn2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+</databaseChangeLog>
