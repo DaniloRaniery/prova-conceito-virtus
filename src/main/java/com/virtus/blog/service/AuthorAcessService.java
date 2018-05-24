@@ -1,17 +1,22 @@
 package com.virtus.blog.service;
 
 import com.virtus.blog.domain.AuthorAcess;
+import com.virtus.blog.domain.Authority;
+import com.virtus.blog.domain.User;
 import com.virtus.blog.repository.AuthorAcessRepository;
+import com.virtus.blog.repository.UserRepository;
 import com.virtus.blog.repository.search.AuthorAcessSearchRepository;
 import com.virtus.blog.service.dto.AuthorAcessDTO;
+import com.virtus.blog.service.dto.UserDTO;
 import com.virtus.blog.service.mapper.AuthorAcessMapper;
+import com.virtus.blog.service.mapper.UserMapper;
+import com.virtus.blog.web.rest.errors.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -28,14 +33,26 @@ public class AuthorAcessService {
 
     private final AuthorAcessRepository authorAcessRepository;
 
+    private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
+
+    private final UserService userService;
+
     private final AuthorAcessMapper authorAcessMapper;
 
     private final AuthorAcessSearchRepository authorAcessSearchRepository;
 
-    public AuthorAcessService(AuthorAcessRepository authorAcessRepository, AuthorAcessMapper authorAcessMapper, AuthorAcessSearchRepository authorAcessSearchRepository) {
+
+    public AuthorAcessService(AuthorAcessRepository authorAcessRepository, AuthorAcessMapper authorAcessMapper,
+                              AuthorAcessSearchRepository authorAcessSearchRepository, UserRepository userRepository,
+                              UserMapper userMapper, UserService userService) {
         this.authorAcessRepository = authorAcessRepository;
         this.authorAcessMapper = authorAcessMapper;
         this.authorAcessSearchRepository = authorAcessSearchRepository;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.userService = userService;
     }
 
     /**
@@ -103,5 +120,41 @@ public class AuthorAcessService {
             .stream(authorAcessSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .map(authorAcessMapper::toDto)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Allow access to the sent user.
+     *
+     * @param id the id of the entity
+     */
+    public void allowAccess(Long id) {
+
+        AuthorAcess author = authorAcessRepository.findOne(id);
+
+        Authority authorityAuthor = new Authority();
+        authorityAuthor.setName("ROLE_AUTHOR");
+        Authority authorityUser = new Authority();
+        authorityUser.setName("ROLE_USER");
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authorityAuthor);
+        authorities.add(authorityUser);
+
+        if (author == null) {
+            throw new UserNotFoundException();
+        }
+
+        Optional<User> user = userRepository.findOneByLogin(author.getRequestLogin());
+
+        if (user.isPresent()){
+            User userDomain = user.get();
+            userDomain.setAuthorities(authorities);
+            UserDTO userDTO = userMapper.userToUserDTO(userDomain);
+            userService.updateUser(userDTO);
+
+        }else{
+            throw new UserNotFoundException();
+        }
+
+        this.delete(id);
     }
 }
