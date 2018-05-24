@@ -93,6 +93,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private Set<Post> posts = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Commentary> comments = new HashSet<>();
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -222,6 +226,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
+    }
+
+    public Set<Commentary> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Commentary> comments) {
+        this.comments = comments;
     }
 
     @Override

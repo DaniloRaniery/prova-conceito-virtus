@@ -74,13 +74,12 @@ public class CommentaryResource {
     @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<CommentaryDTO> createCommentary(@Valid @RequestBody CommentaryDTO commentaryDTO) throws URISyntaxException {
         log.debug("REST request to save Commentary : {}", commentaryDTO);
-        if (commentaryDTO.getId() != null) {
-            throw new BadRequestAlertException("A new commentary cannot already have an ID", ENTITY_NAME, "idexists");
+        if (commentaryDTO.getUserId() == null || commentaryDTO.getPostId() == null) {
+            throw new BadRequestAlertException("A new commentary needs a user and post id", ENTITY_NAME, "idnotexists");
         }
-        Commentary commentary = commentaryMapper.toEntity(commentaryDTO);
-        commentary = commentaryRepository.save(commentary);
-        CommentaryDTO result = commentaryMapper.toDto(commentary);
-        commentarySearchRepository.save(commentary);
+
+        CommentaryDTO result = commentaryService.createAndUpdateCommentary(commentaryDTO);
+
         return ResponseEntity.created(new URI("/api/commentaries/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -100,13 +99,13 @@ public class CommentaryResource {
     @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<CommentaryDTO> updateCommentary(@Valid @RequestBody CommentaryDTO commentaryDTO) throws URISyntaxException {
         log.debug("REST request to update Commentary : {}", commentaryDTO);
-        if (commentaryDTO.getId() == null) {
-            return createCommentary(commentaryDTO);
+
+        if (commentaryDTO.getUserId() == null || commentaryDTO.getPostId() == null) {
+            throw new BadRequestAlertException("A new commentary needs a user and post id", ENTITY_NAME, "idnotexists");
         }
-        Commentary commentary = commentaryMapper.toEntity(commentaryDTO);
-        commentary = commentaryRepository.save(commentary);
-        CommentaryDTO result = commentaryMapper.toDto(commentary);
-        commentarySearchRepository.save(commentary);
+
+        CommentaryDTO result = commentaryService.createAndUpdateCommentary(commentaryDTO);
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, commentaryDTO.getId().toString()))
             .body(result);
@@ -120,7 +119,6 @@ public class CommentaryResource {
      */
     @GetMapping("/commentaries")
     @Timed
-    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<List<CommentaryDTO>> getAllCommentariesForPost(RequestCommentaryDTO requestCommentaryDTO, Pageable pageable) {
         log.debug("REST request to get a page of Commentaries");
         Page<Commentary> page = commentaryService.getAllCommentsForUser(requestCommentaryDTO, pageable);
@@ -136,7 +134,6 @@ public class CommentaryResource {
      */
     @GetMapping("/commentaries/{id}")
     @Timed
-    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<CommentaryDTO> getCommentary(@PathVariable Long id) {
         log.debug("REST request to get Commentary : {}", id);
         Commentary commentary = commentaryRepository.findOne(id);
@@ -170,7 +167,6 @@ public class CommentaryResource {
      */
     @GetMapping("/_search/commentaries")
     @Timed
-    @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<List<CommentaryDTO>> searchCommentaries(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of Commentaries for query {}", query);
         Page<Commentary> page = commentarySearchRepository.search(queryStringQuery(query), pageable);

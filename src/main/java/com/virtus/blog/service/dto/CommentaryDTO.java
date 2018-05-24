@@ -19,8 +19,10 @@ public class CommentaryDTO implements Serializable {
     @Lob
     private String text;
 
+    @NotNull
     private Long userId;
 
+    @NotNull
     private Long postId;
 
     public Long getId() {
