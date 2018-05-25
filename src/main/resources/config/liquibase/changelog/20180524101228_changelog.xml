@@ -129,17 +129,11 @@
     <changeSet author="luan (generated)" id="1527167551423-13">
         <addPrimaryKey columnNames="name" constraintName="jhi_authorityPK" tableName="jhi_authority"/>
     </changeSet>
-    <changeSet author="luan (generated)" id="1527167551423-14">
-        <addUniqueConstraint columnNames="user_id" constraintName="UC_COMMENTARYUSER_ID_COL" tableName="commentary"/>
-    </changeSet>
     <changeSet author="luan (generated)" id="1527167551423-15">
         <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
     </changeSet>
     <changeSet author="luan (generated)" id="1527167551423-16">
         <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="luan (generated)" id="1527167551423-17">
-        <addUniqueConstraint columnNames="author_id" constraintName="UC_POSTAUTHOR_ID_COL" tableName="post"/>
     </changeSet>
     <changeSet author="luan (generated)" id="1527167551423-18">
         <addUniqueConstraint columnNames="body_id" constraintName="UC_POSTBODY_ID_COL" tableName="post"/>

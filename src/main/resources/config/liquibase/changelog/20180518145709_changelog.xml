@@ -118,9 +118,6 @@
     <changeSet author="militofarias (generated)" id="1526666232244-13">
         <addPrimaryKey columnNames="name" constraintName="jhi_authorityPK" tableName="jhi_authority"/>
     </changeSet>
-    <changeSet author="militofarias (generated)" id="1526666232244-14">
-        <addUniqueConstraint columnNames="user_id" constraintName="UC_COMMENTARYUSER_ID_COL" tableName="commentary"/>
-    </changeSet>
     <changeSet author="militofarias (generated)" id="1526666232244-15">
         <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
     </changeSet>

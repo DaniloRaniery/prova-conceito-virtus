@@ -5,9 +5,6 @@
             <column name="author_id" type="bigint"/>
         </addColumn>
     </changeSet>
-    <changeSet author="luan (generated)" id="1527167828881-2">
-        <addUniqueConstraint columnNames="author_id" constraintName="UC_POSTAUTHOR_ID_COL" tableName="post"/>
-    </changeSet>
     <changeSet author="luan (generated)" id="1527167828881-3">
         <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="post" constraintName="FKjwr1qwhc6w9bef0i6m1kdqqn2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
     </changeSet>

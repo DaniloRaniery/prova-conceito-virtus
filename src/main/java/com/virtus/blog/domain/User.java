@@ -89,11 +89,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column
     private String biography;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany
     @JsonIgnore
     private Set<Post> posts = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany
     @JsonIgnore
     private Set<Commentary> comments = new HashSet<>();
 

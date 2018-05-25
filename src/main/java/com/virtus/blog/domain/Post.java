@@ -40,14 +40,12 @@ public class Post implements Serializable {
     private ZonedDateTime date;
 
     @ManyToOne
-    @JoinColumn(unique = true)
     private User author;
 
     @OneToOne
-    @JoinColumn(unique = true)
     private Body body;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Commentary> commentaries = new HashSet<>();

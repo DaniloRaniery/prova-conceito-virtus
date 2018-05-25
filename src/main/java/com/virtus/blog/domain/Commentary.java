@@ -32,7 +32,6 @@ public class Commentary implements Serializable {
     private String text;
 
     @OneToOne
-    @JoinColumn(unique = true)
     private User user;
 
     @ManyToOne

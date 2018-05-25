@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="luan (generated)" id="1527278086439-1">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_comments" constraintName="FKg20dbj2ov9t8esa5mpkhxn1u0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527278086439-2">
+        <dropUniqueConstraint constraintName="UK_tm3fm1pwxrn80tck6o2sityro" tableName="jhi_user_comments"/>
+        <dropUniqueConstraint constraintName="constraint_index_5" tableName="commentary"/>
+        <dropUniqueConstraint constraintName="UK_tm3fm1pwxrn80tck6o2sityro_index_5" tableName="jhi_user_comments"/>
+        <dropUniqueConstraint constraintName="constraint_2" tableName="POST"/>
+    </changeSet>
+</databaseChangeLog>

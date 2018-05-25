@@ -25,7 +25,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="user_id" type="bigint">
-                <constraints unique="true" nullable="true" />
+                <constraints nullable="true" />
             </column>
             <column name="post_id" type="bigint">
                 <constraints nullable="true" />
@@ -33,7 +33,7 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>
