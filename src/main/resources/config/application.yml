@@ -52,6 +52,11 @@ spring:
         name: JHipsterBlog
     jackson:
         serialization.write_dates_as_timestamps: false
+    http:
+        multipart:
+            enabled: true
+            max-file-size: 1000MB
+            max-request-size: 10000MB
     jpa:
         open-in-view: false
         hibernate:
@@ -123,4 +128,7 @@ jhipster:
 # http://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
+
 application:
+
+
