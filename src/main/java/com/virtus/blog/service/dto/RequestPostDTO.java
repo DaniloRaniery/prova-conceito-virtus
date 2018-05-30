@@ -1,5 +1,7 @@
 package com.virtus.blog.service.dto;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -11,13 +13,13 @@ import java.util.List;
  */
 public class RequestPostDTO {
 
-    @NotNull
+    @NotBlank
     private String title;
 
     @NotNull
     private ZonedDateTime date;
 
-    @NotNull
+    @NotBlank
     private String bodyText;
 
     @NotNull
