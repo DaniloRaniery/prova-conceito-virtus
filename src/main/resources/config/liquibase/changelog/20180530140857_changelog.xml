@@ -1,0 +1,81 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="luan (generated)" id="1527700141247-1">
+        <createTable tableName="jhi_user_comments">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-2">
+        <createTable tableName="jhi_user_posts">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="posts_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-3">
+        <createTable tableName="post_commentaries">
+            <column name="post_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="commentaries_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-4">
+        <addColumn tableName="asset">
+            <column name="asset_name" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-5">
+        <addColumn tableName="asset">
+            <column name="asset_path" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-6">
+        <addColumn tableName="asset">
+            <column name="asset_type" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-7">
+        <addPrimaryKey columnNames="user_id, comments_id" tableName="jhi_user_comments"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-8">
+        <addPrimaryKey columnNames="user_id, posts_id" tableName="jhi_user_posts"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-9">
+        <addPrimaryKey columnNames="post_id, commentaries_id" tableName="post_commentaries"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-13">
+        <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="post_commentaries" constraintName="FK2u4n9nu5hqdeyhgh0hds43fne" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="post"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-14">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_posts" constraintName="FKccj1iupbclk5yilw67chg4da9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-15">
+        <addForeignKeyConstraint baseColumnNames="comments_id" baseTableName="jhi_user_comments" constraintName="FKegrmk3f62ccjyw0943skbqvj8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commentary"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-16">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_comments" constraintName="FKg20dbj2ov9t8esa5mpkhxn1u0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-17">
+        <addForeignKeyConstraint baseColumnNames="commentaries_id" baseTableName="post_commentaries" constraintName="FKllmngwi277bm6wdmk7m56qqk4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commentary"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-18">
+        <addForeignKeyConstraint baseColumnNames="posts_id" baseTableName="jhi_user_posts" constraintName="FKok5mvblfgnlolbnp2o8alfeqc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="post"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-19">
+        <dropUniqueConstraint constraintName="CONSTRAINT_2" tableName="POST"/>
+    </changeSet>
+    <changeSet author="luan (generated)" id="1527700141247-20">
+        <dropColumn columnName="IMAGE_PATH" tableName="ASSET"/>
+    </changeSet>
+</databaseChangeLog>

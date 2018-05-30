@@ -52,7 +52,7 @@ public class BodyService {
      * @param bodyId body to update
      * @throws PostNotFoundException 400 (Bad Request) if the body id is not found
      */
-    public void updateBody(Long bodyId, String textBody, List<String> newAssets) {
+    public void updateBody(Long bodyId, String textBody) {
 
         Body body = bodyRepository
             .findOne(bodyId);
@@ -63,25 +63,8 @@ public class BodyService {
 
         body.setText(textBody);
 
-        body.setAssets(this.updateAssets(body, newAssets));
-
         body = bodyRepository.save(body);
         bodySearchRepository.save(body);
-    }
-
-    private Set<Asset> updateAssets(Body body, List<String> newAssets) {
-
-
-        for (Asset asset : body.getAssets()) {
-            assetRepository.delete(asset.getId());
-            assetSearchRepository.delete(asset.getId());
-        }
-
-        if (newAssets.isEmpty()){
-            return new HashSet<>();
-        }
-
-        return this.createAsset(newAssets, body);
     }
 
     /**
@@ -109,15 +92,16 @@ public class BodyService {
      * @param body           the body being generated
      * @return the assets list
      */
-    private Set<Asset> createAsset(List<String> assetsToCreate, Body body) {
+    private Set<Asset> createAsset(List<Long> assetsToCreate, Body body) {
 
         Set<Asset> assets = new HashSet<>();
-        for (String asset : assetsToCreate) {
-            Asset newAsset = new Asset();
-            newAsset.setImagePath(asset);
-            newAsset.setBody(body);
-            Asset savedAsset = assetRepository.save(newAsset);
-            assets.add(savedAsset);
+        for (Long asset : assetsToCreate) {
+            Asset newAsset = assetRepository.findOne(asset);
+            if (newAsset != null) {
+                newAsset.setBody(body);
+                Asset savedAsset = assetRepository.save(newAsset);
+                assets.add(savedAsset);
+            }
         }
 
         return assets;
@@ -135,7 +119,7 @@ public class BodyService {
         List<String> listToReturn = new ArrayList<>();
 
         for (Asset asset : body.getAssets()) {
-            listToReturn.add(asset.getImagePath());
+            listToReturn.add(asset.getAssetName());
         }
         return listToReturn;
     }

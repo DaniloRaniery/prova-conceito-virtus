@@ -156,9 +156,6 @@ public class PostService {
         if (updatePostDTO.getDate() != null) {
             postToUpdate.setDate(updatePostDTO.getDate());
         }
-        if (updatePostDTO.getAssets() != null) {
-            postToUpdate.setAssets(updatePostDTO.getAssets());
-        }
 
         return this.updatePost(postToUpdate);
     }
@@ -173,7 +170,7 @@ public class PostService {
     public PostDTO updatePost(PostDTO postDTO) {
 
         PostDTO postDTOToReturn = this.save(postDTO);
-        bodyService.updateBody(postDTO.getBodyId(), postDTO.getTextBody(), postDTO.getAssets());
+        bodyService.updateBody(postDTO.getBodyId(), postDTO.getTextBody());
 
         BodyDTO bodyDTO = bodyMapper.toDto(bodyRepository.findOne(postDTO.getBodyId()));
 

@@ -18,8 +18,6 @@ public class UpdatePostDTO {
 
     private String textBody;
 
-    private List<String> assets;
-
     private Long authorId;
 
     public Long getId() {
@@ -60,14 +58,6 @@ public class UpdatePostDTO {
 
     public void setTextBody(String textBody) {
         this.textBody = textBody;
-    }
-
-    public List<String> getAssets() {
-        return assets;
-    }
-
-    public void setAssets(List<String> assets) {
-        this.assets = assets;
     }
 
     public Long getAuthorId() {

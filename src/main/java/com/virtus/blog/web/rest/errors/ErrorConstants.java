@@ -16,6 +16,7 @@ public final class ErrorConstants {
     public static final URI EMAIL_NOT_FOUND_TYPE = URI.create(PROBLEM_BASE_URL + "/email-not-found");
     public static final URI USER_NOT_FOUND_TYPE = URI.create(PROBLEM_BASE_URL + "/user-not-found");
     public static final URI POST_NOT_FOUND_TYPE = URI.create(PROBLEM_BASE_URL + "/post-not-found");
+    public static final URI ASSET_NOT_FOUND_TYPE = URI.create(PROBLEM_BASE_URL + "/post-not-found");
 
     private ErrorConstants() {
     }

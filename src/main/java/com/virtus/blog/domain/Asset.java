@@ -25,8 +25,14 @@ public class Asset implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "image_path")
-    private String imagePath;
+    @Column(name = "asset_path")
+    private String assetPath;
+
+    @Column(name = "asset_name")
+    private String assetName;
+
+    @Column(name = "asset_type")
+    private String assetType;
 
     @ManyToOne
     private Body body;
@@ -40,17 +46,20 @@ public class Asset implements Serializable {
         this.id = id;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getAssetPath() {
+        return assetPath;
     }
 
-    public Asset imagePath(String imagePath) {
-        this.imagePath = imagePath;
-        return this;
+    public void setAssetPath(String assetPath) {
+        this.assetPath = assetPath;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
     }
 
     public Body getBody() {
@@ -60,6 +69,14 @@ public class Asset implements Serializable {
     public Asset body(Body body) {
         this.body = body;
         return this;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 
     public void setBody(Body body) {
@@ -91,7 +108,7 @@ public class Asset implements Serializable {
     public String toString() {
         return "Asset{" +
             "id=" + getId() +
-            ", imagePath='" + getImagePath() + "'" +
+            ", assetPath='" + getAssetPath() + "'" +
             "}";
     }
 }

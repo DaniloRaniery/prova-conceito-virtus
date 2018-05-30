@@ -12,10 +12,15 @@ import org.mapstruct.*;
 public interface PostMapper extends EntityMapper<PostDTO, Post> {
 
     @Mapping(source = "body.id", target = "bodyId")
+    @Mapping(source = "body.text", target = "textBody")
+    @Mapping(target = "assets", ignore = true)
+    @Mapping(target = "posts", ignore = true)
+    @Mapping(source = "author.id", target = "authorId")
     PostDTO toDto(Post post);
 
     @Mapping(source = "bodyId", target = "body")
     @Mapping(target = "commentaries", ignore = true)
+    @Mapping(source = "authorId", target = "author.id")
     Post toEntity(PostDTO postDTO);
 
     default Post fromId(Long id) {

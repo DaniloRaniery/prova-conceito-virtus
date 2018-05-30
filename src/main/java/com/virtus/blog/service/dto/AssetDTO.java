@@ -1,6 +1,7 @@
 package com.virtus.blog.service.dto;
 
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,11 @@ public class AssetDTO implements Serializable {
 
     private Long id;
 
-    private String imagePath;
+    private String assetPath;
+
+    private String assetName;
+
+    private String assetType;
 
     private Long bodyId;
 
@@ -25,12 +30,28 @@ public class AssetDTO implements Serializable {
         this.id = id;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getAssetPath() {
+        return assetPath;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setAssetPath(String assetPath) {
+        this.assetPath = assetPath;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
     }
 
     public Long getBodyId() {
@@ -66,7 +87,7 @@ public class AssetDTO implements Serializable {
     public String toString() {
         return "AssetDTO{" +
             "id=" + getId() +
-            ", imagePath='" + getImagePath() + "'" +
+            ", assetPath='" + getAssetPath() + "'" +
             "}";
     }
 }

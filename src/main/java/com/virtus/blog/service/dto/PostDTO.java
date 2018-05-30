@@ -1,6 +1,7 @@
 package com.virtus.blog.service.dto;
 
 import com.virtus.blog.domain.Post;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
@@ -17,7 +18,7 @@ public class PostDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String title;
 
     @NotNull
@@ -31,8 +32,6 @@ public class PostDTO implements Serializable {
     private String textBody;
 
     private List<String> assets;
-
-    private Set<Post> posts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -88,14 +87,6 @@ public class PostDTO implements Serializable {
 
     public void setAuthorId(Long authorId) {
         this.authorId = authorId;
-    }
-
-    public Set<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<Post> posts) {
-        this.posts = posts;
     }
 
     @Override
