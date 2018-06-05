@@ -3,7 +3,9 @@ package com.virtus.blog.web.rest;
 import com.virtus.blog.JHipsterBlogApp;
 
 import com.virtus.blog.domain.Post;
+import com.virtus.blog.repository.BodyRepository;
 import com.virtus.blog.repository.PostRepository;
+import com.virtus.blog.service.BodyService;
 import com.virtus.blog.service.PostService;
 import com.virtus.blog.repository.search.PostSearchRepository;
 import com.virtus.blog.service.dto.PostDTO;
@@ -66,6 +68,12 @@ public class PostResourceIntTest {
     private PostSearchRepository postSearchRepository;
 
     @Autowired
+    private BodyRepository bodyRepository;
+
+    @Autowired
+    private BodyService bodyService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -84,7 +92,7 @@ public class PostResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PostResource postResource = new PostResource(postService);
+        final PostResource postResource = new PostResource(postService, bodyRepository, bodyService);
         this.restPostMockMvc = MockMvcBuilders.standaloneSetup(postResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

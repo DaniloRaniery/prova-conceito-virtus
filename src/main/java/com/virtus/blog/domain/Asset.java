@@ -82,6 +82,12 @@ public class Asset implements Serializable {
     public void setBody(Body body) {
         this.body = body;
     }
+
+    public Asset assetPath(String assetPath) {
+        this.assetPath = assetPath;
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

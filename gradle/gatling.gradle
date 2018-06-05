@@ -16,6 +16,6 @@ gatling {
     bodiesDir = 'user-files/bodies'
     confDir = 'conf'
     simulations = {
-        include "**/*GatlingTest.scala"
+        include "**/CommentaryGatlingTest.scala"
     }
 }

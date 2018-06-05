@@ -7,6 +7,7 @@ import com.virtus.blog.repository.AssetRepository;
 import com.virtus.blog.repository.BodyRepository;
 import com.virtus.blog.repository.PostRepository;
 import com.virtus.blog.repository.UserRepository;
+import com.virtus.blog.repository.search.BodySearchRepository;
 import com.virtus.blog.repository.search.PostSearchRepository;
 import com.virtus.blog.service.dto.BodyDTO;
 import com.virtus.blog.service.dto.PostDTO;
@@ -50,8 +51,11 @@ public class PostService {
 
     private final PostSearchRepository postSearchRepository;
 
+    private final BodySearchRepository bodySearchRepository;
+
     public PostService(PostRepository postRepository, PostMapper postMapper, PostSearchRepository postSearchRepository,
-                       BodyService bodyService, BodyRepository bodyRepository, BodyMapper bodyMapper, UserRepository userRepository) {
+                       BodyService bodyService, BodyRepository bodyRepository, BodyMapper bodyMapper, UserRepository userRepository,
+                       BodySearchRepository bodySearchRepository) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.postSearchRepository = postSearchRepository;
@@ -59,6 +63,7 @@ public class PostService {
         this.bodyRepository = bodyRepository;
         this.bodyMapper = bodyMapper;
         this.userRepository = userRepository;
+        this.bodySearchRepository = bodySearchRepository;
     }
 
     /**
@@ -110,6 +115,10 @@ public class PostService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Post : {}", id);
+        Post post = postRepository.findOne(id);
+
+        bodyRepository.delete(post.getBody().getId());
+        bodySearchRepository.delete(post.getBody().getId());
         postRepository.delete(id);
         postSearchRepository.delete(id);
     }

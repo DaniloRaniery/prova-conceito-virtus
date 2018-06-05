@@ -79,6 +79,8 @@ public class CommentaryService {
         CommentaryDTO result = commentaryMapper.toDto(commentary);
         commentarySearchRepository.save(commentary);
 
+
+
         return result;
     }
 }

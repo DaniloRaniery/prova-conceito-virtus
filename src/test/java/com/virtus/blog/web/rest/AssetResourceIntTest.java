@@ -5,6 +5,7 @@ import com.virtus.blog.JHipsterBlogApp;
 import com.virtus.blog.domain.Asset;
 import com.virtus.blog.repository.AssetRepository;
 import com.virtus.blog.repository.search.AssetSearchRepository;
+import com.virtus.blog.service.AssetService;
 import com.virtus.blog.service.dto.AssetDTO;
 import com.virtus.blog.service.mapper.AssetMapper;
 import com.virtus.blog.web.rest.errors.ExceptionTranslator;
@@ -41,8 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = JHipsterBlogApp.class)
 public class AssetResourceIntTest {
 
-    private static final String DEFAULT_IMAGE_PATH = "AAAAAAAAAA";
-    private static final String UPDATED_IMAGE_PATH = "BBBBBBBBBB";
+    private static final String DEFAULT_ASSET_PATH = "AAAAAAAAAA";
+    private static final String UPDATED_ASSET_PATH = "BBBBBBBBBB";
 
     @Autowired
     private AssetRepository assetRepository;
@@ -52,6 +53,9 @@ public class AssetResourceIntTest {
 
     @Autowired
     private AssetSearchRepository assetSearchRepository;
+
+    @Autowired
+    private AssetService assetService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -72,7 +76,8 @@ public class AssetResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AssetResource assetResource = new AssetResource(assetRepository, assetMapper, assetSearchRepository);
+        final AssetResource assetResource = new AssetResource(assetRepository, assetMapper, assetSearchRepository,
+            assetService);
         this.restAssetMockMvc = MockMvcBuilders.standaloneSetup(assetResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -82,13 +87,13 @@ public class AssetResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static Asset createEntity(EntityManager em) {
         Asset asset = new Asset()
-            .imagePath(DEFAULT_IMAGE_PATH);
+            .assetPath(DEFAULT_ASSET_PATH);
         return asset;
     }
 
@@ -114,7 +119,7 @@ public class AssetResourceIntTest {
         List<Asset> assetList = assetRepository.findAll();
         assertThat(assetList).hasSize(databaseSizeBeforeCreate + 1);
         Asset testAsset = assetList.get(assetList.size() - 1);
-        assertThat(testAsset.getImagePath()).isEqualTo(DEFAULT_IMAGE_PATH);
+        assertThat(testAsset.getAssetPath()).isEqualTo(DEFAULT_ASSET_PATH);
 
         // Validate the Asset in Elasticsearch
         Asset assetEs = assetSearchRepository.findOne(testAsset.getId());
@@ -152,7 +157,7 @@ public class AssetResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(asset.getId().intValue())))
-            .andExpect(jsonPath("$.[*].imagePath").value(hasItem(DEFAULT_IMAGE_PATH.toString())));
+            .andExpect(jsonPath("$.[*].imagePath").value(hasItem(DEFAULT_ASSET_PATH.toString())));
     }
 
     @Test
@@ -166,7 +171,7 @@ public class AssetResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(asset.getId().intValue()))
-            .andExpect(jsonPath("$.imagePath").value(DEFAULT_IMAGE_PATH.toString()));
+            .andExpect(jsonPath("$.imagePath").value(DEFAULT_ASSET_PATH.toString()));
     }
 
     @Test
@@ -190,7 +195,7 @@ public class AssetResourceIntTest {
         // Disconnect from session so that the updates on updatedAsset are not directly saved in db
         em.detach(updatedAsset);
         updatedAsset
-            .imagePath(UPDATED_IMAGE_PATH);
+            .assetPath(UPDATED_ASSET_PATH);
         AssetDTO assetDTO = assetMapper.toDto(updatedAsset);
 
         restAssetMockMvc.perform(put("/api/assets")
@@ -202,7 +207,7 @@ public class AssetResourceIntTest {
         List<Asset> assetList = assetRepository.findAll();
         assertThat(assetList).hasSize(databaseSizeBeforeUpdate);
         Asset testAsset = assetList.get(assetList.size() - 1);
-        assertThat(testAsset.getImagePath()).isEqualTo(UPDATED_IMAGE_PATH);
+        assertThat(testAsset.getAssetPath()).isEqualTo(UPDATED_ASSET_PATH);
 
         // Validate the Asset in Elasticsearch
         Asset assetEs = assetSearchRepository.findOne(testAsset.getId());
@@ -262,7 +267,7 @@ public class AssetResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(asset.getId().intValue())))
-            .andExpect(jsonPath("$.[*].imagePath").value(hasItem(DEFAULT_IMAGE_PATH.toString())));
+            .andExpect(jsonPath("$.[*].imagePath").value(hasItem(DEFAULT_ASSET_PATH.toString())));
     }
 
     @Test

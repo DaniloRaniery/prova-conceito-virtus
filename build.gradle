@@ -27,8 +27,8 @@ plugins {
 }
 
 apply plugin: 'java'
-sourceCompatibility=1.8
-targetCompatibility=1.8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 // Until JHipster supports JDK 9
 assert System.properties['java.specification.version'] == '1.8'
 
@@ -41,10 +41,10 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 
 dependencyManagement {
-  imports {
-    mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
-    //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
-  }
+    imports {
+        mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
+        //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
+    }
 }
 
 defaultTasks 'bootRun'
@@ -55,7 +55,7 @@ version = '0.0.1-SNAPSHOT'
 description = ''
 
 bootRepackage {
-   mainClass = 'com.virtus.blog.JHipsterBlogApp'
+    mainClass = 'com.virtus.blog.JHipsterBlogApp'
 }
 
 war {
@@ -205,7 +205,7 @@ dependencies {
     // https://github.com/elastic/elasticsearch/issues/13245
     compile "net.java.dev.jna:jna"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile ("org.springframework.boot:spring-boot-starter-web") {
+    compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: 'spring-boot-starter-tomcat'
     }
     compile "org.springframework.boot:spring-boot-starter-undertow"
@@ -219,7 +219,7 @@ dependencies {
     compile "org.springframework.security:spring-security-data"
     compile "org.springframework.security:spring-security-web"
     compile "io.jsonwebtoken:jjwt"
-    compile ("io.springfox:springfox-swagger2") {
+    compile("io.springfox:springfox-swagger2") {
         exclude module: 'mapstruct'
     }
     compile "io.springfox:springfox-bean-validators"
@@ -228,7 +228,7 @@ dependencies {
     testCompile "com.jayway.jsonpath:json-path"
     testCompile "info.cukes:cucumber-junit"
     testCompile "info.cukes:cucumber-spring"
-    testCompile ("org.springframework.boot:spring-boot-starter-test") {
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
     testCompile "org.springframework.security:spring-security-test"
@@ -238,16 +238,27 @@ dependencies {
     testCompile "org.mockito:mockito-core"
     testCompile "com.mattbertolini:liquibase-slf4j"
     testCompile "org.hamcrest:hamcrest-library"
-    compile group: 'org.springframework', name: 'spring-mock', version: '2.0.8'
-    optional ("org.springframework.boot:spring-boot-configuration-processor") {
+    compile group: 'org.springframework', name: 'spring-test', version: '5.0.6.RELEASE'
+    optional("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
+    compile 'org.scala-lang:scala-library:2.11.8'
+    compile group: 'io.gatling', name: 'gatling-core', version: '2.3.1'
+
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
 task cleanResources(type: Delete) {
     delete 'build/resources'
 }
+
+task cleanGatlingResources(type: Delete) {
+    delete 'build/classes/scala'
+    delete 'build/tmp/scala'
+}
+
+tasks.gatlingRun.dependsOn(cleanGatlingResources)
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4'
@@ -265,6 +276,9 @@ if (project.hasProperty('nodeInstall')) {
     }
 }
 
+
+
+
 compileJava.dependsOn processResources
-processResources.dependsOn cleanResources,bootBuildInfo
+processResources.dependsOn cleanResources, bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources

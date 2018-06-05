@@ -68,16 +68,10 @@ class AuthorAcessGatlingTest extends Simulation {
             .exec(http("Create new authorAcess")
             .post("/api/author-acesses")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "requestLogin":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"requestLogin":"user"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_authorAcess_url"))).exitHereIfFailed
             .pause(10)
-            .repeat(5) {
-                exec(http("Get created authorAcess")
-                .get("${new_authorAcess_url}")
-                .headers(headers_http_authenticated))
-                .pause(10)
-            }
             .exec(http("Delete created authorAcess")
             .delete("${new_authorAcess_url}")
             .headers(headers_http_authenticated))

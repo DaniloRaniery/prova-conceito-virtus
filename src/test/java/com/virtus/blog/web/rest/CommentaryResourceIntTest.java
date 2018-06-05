@@ -5,6 +5,7 @@ import com.virtus.blog.JHipsterBlogApp;
 import com.virtus.blog.domain.Commentary;
 import com.virtus.blog.repository.CommentaryRepository;
 import com.virtus.blog.repository.search.CommentarySearchRepository;
+import com.virtus.blog.service.CommentaryService;
 import com.virtus.blog.service.dto.CommentaryDTO;
 import com.virtus.blog.service.mapper.CommentaryMapper;
 import com.virtus.blog.web.rest.errors.ExceptionTranslator;
@@ -52,6 +53,9 @@ public class CommentaryResourceIntTest {
     private CommentaryMapper commentaryMapper;
 
     @Autowired
+    private CommentaryService commentaryService;
+
+    @Autowired
     private CommentarySearchRepository commentarySearchRepository;
 
     @Autowired
@@ -73,7 +77,8 @@ public class CommentaryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CommentaryResource commentaryResource = new CommentaryResource(commentaryRepository, commentaryMapper, commentarySearchRepository);
+        final CommentaryResource commentaryResource = new CommentaryResource(commentaryRepository, commentaryMapper,
+            commentarySearchRepository, commentaryService);
         this.restCommentaryMockMvc = MockMvcBuilders.standaloneSetup(commentaryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
